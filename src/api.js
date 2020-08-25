@@ -27,6 +27,9 @@ app.use("/.netlify/functions/api", apiRouter);
 var today = new Date();
 var date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate(); 
 
+//구글 백세팅 시작
+
+
 //클로저 함수 시작
 function setArray(arr) {
   return {
@@ -64,6 +67,54 @@ function setArray2(ids) {
 const getRecordId = setArray2([]);
 
 //클로저 함수 끝(for get record Id)
+
+apiRouter.post("/gs_cost_input", (req, res) => {
+  item.ini_arr();
+  var buyer = JSON.stringify(req.body.action.detailParams.amount.value); 
+  var buyer = buyer.replace(/\"/g, "");  
+  var content = JSON.stringify(req.body.action.detailParams.naeyong.origin);  
+
+
+  var writer = JSON.stringify(req.body.userRequest.user.id);
+  var wri = writer.replace(/\"/g, "");
+  var wri = getName(wri);
+  var wri = wri[0].name
+
+  setTimeout(function(){
+  const responseBody = {
+    version: "2.0",
+    template: {
+      outputs: [
+        {
+          "basicCard": {
+            "title": "AIRTABLE 사진추가 하실래요?",
+            "description" : "거래처 :" + buyer,
+            "thumbnail": {
+              "imageUrl": "https://ifh.cc/g/Bo8Ecb.jpg"
+            },
+            "buttons": [
+              {
+                "action": "block",
+                "label": "추가하기",
+                "blockId": "5f2f475ef8e71a0001de609b"
+              },
+              {
+                "action":  "message",
+                "label": "종료하기",
+                "messageText": "종료"
+              }
+            ]
+          }
+        },
+      ],
+    },
+  };
+
+  
+  res.status(200).send(responseBody);
+  },500);
+  
+});
 
 
 apiRouter.post("/air_content_input", (req, res) => {
